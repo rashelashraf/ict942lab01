@@ -14,11 +14,9 @@
       color: #333;
       background-color: #f5f7f9;
     }
-    
     h1, h2, h3 {
       color: #2c3e50;
     }
-    
     .section {
       background-color: white;
       padding: 20px;
@@ -26,13 +24,11 @@
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    
     label {
       display: block;
       margin-top: 15px;
       font-weight: bold;
     }
-    
     input[type="text"], textarea {
       width: 100%;
       padding: 10px;
@@ -41,12 +37,10 @@
       border-radius: 4px;
       font-size: 16px;
     }
-    
     textarea {
       height: 100px;
       resize: vertical;
     }
-    
     button {
       background-color: #3498db;
       color: white;
@@ -57,25 +51,21 @@
       margin-top: 10px;
       font-size: 16px;
     }
-    
     button:hover {
       background-color: #2980b9;
     }
-    
     .screenshot-container {
       margin-top: 10px;
       border: 2px dashed #ccc;
       padding: 10px;
       text-align: center;
     }
-    
     .screenshot-preview {
       max-width: 100%;
       max-height: 300px;
       margin-top: 10px;
       display: none;
     }
-    
     .system-info {
       font-size: 14px;
       background-color: #f1f1f1;
@@ -83,22 +73,18 @@
       border-radius: 4px;
       margin-top: 20px;
     }
-    
     .quiz-container {
       margin-top: 20px;
     }
-    
     .quiz-question {
       margin-bottom: 15px;
     }
-    
     .progress-bar {
       height: 10px;
       background-color: #e0e0e0;
       border-radius: 5px;
       margin-bottom: 20px;
     }
-    
     .progress {
       height: 100%;
       background-color: #3498db;
@@ -106,24 +92,20 @@
       width: 0%;
       transition: width 0.3s;
     }
-    
     .submit-btn {
       background-color: #27ae60;
       font-size: 18px;
       padding: 12px 20px;
     }
-    
     .submit-btn:hover {
       background-color: #219955;
     }
-    
     .timer {
       font-size: 18px;
       text-align: right;
       color: #e74c3c;
       font-weight: bold;
     }
-    
     .alert {
       padding: 10px;
       background-color: #f8d7da;
@@ -300,10 +282,10 @@
   <button class="submit-btn" id="generateReport">Print Assignment</button>
   
   <script>
-    // System information and time tracking
+    // Update system information
     function updateSystemInfo() {
-      document.getElementById('browserInfo').textContent = 
-        navigator.userAgent + ' | ' + 
+      document.getElementById('browserInfo').textContent =
+        navigator.userAgent + ' | ' +
         window.screen.width + 'x' + window.screen.height + ' | ' +
         'Platform: ' + navigator.platform;
       
@@ -318,13 +300,21 @@
       timerInterval = setInterval(() => {
         const now = new Date();
         const diff = Math.floor((now - startTime) / 1000);
-        
         const hours = Math.floor(diff / 3600).toString().padStart(2, '0');
         const minutes = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
         const seconds = (diff % 60).toString().padStart(2, '0');
-        
         document.getElementById('timeSpent').textContent = `${hours}:${minutes}:${seconds}`;
       }, 1000);
+    }
+    
+    // Count total words in text inputs and textareas
+    function getTotalWordCount() {
+      const textElements = document.querySelectorAll('input[type="text"], textarea');
+      let totalWords = 0;
+      textElements.forEach(element => {
+        totalWords += element.value.split(/\s+/).filter(word => word.length > 0).length;
+      });
+      return totalWords;
     }
     
     // Prevent paste on specific fields
@@ -336,10 +326,10 @@
       noPasteFields.forEach(field => {
         field.addEventListener('paste', (e) => {
           e.preventDefault();
-          const alert = document.getElementById('pasteAlert');
-          alert.style.display = 'block';
+          const alertBox = document.getElementById('pasteAlert');
+          alertBox.style.display = 'block';
           setTimeout(() => {
-            alert.style.display = 'none';
+            alertBox.style.display = 'none';
           }, 3000);
         });
       });
@@ -362,7 +352,7 @@
         });
       });
       
-      // Progress tracking: updated totalFields to 27 to include the student info fields.
+      // Progress tracking: totalFields updated to 27 to include student info fields.
       function updateProgress() {
         const totalFields = 27;
         let filledFields = 0;
@@ -387,7 +377,7 @@
         const quizQuestions = 5;
         for (let i = 1; i <= quizQuestions; i++) {
           const questionName = 'q' + i;
-          const answeredQuestion = document.querySelector(`input[name="${questionName}"]:checked`);
+          const answeredQuestion = document.querySelector('input[name="' + questionName + '"]:checked');
           if (answeredQuestion) {
             filledFields++;
           }
@@ -417,10 +407,16 @@
     });
     
     function generateReport() {
+      // Check if total word count is at least 20 words
+      if (getTotalWordCount() < 20) {
+        alert("You must enter at least 20 words in your assignment before generating the report.");
+        return;
+      }
+      
       // Create a report window
       const reportWindow = window.open('', '_blank', 'width=800,height=800');
       
-      // Get all form values including new student info fields
+      // Get all form values
       const reportData = {
         studentName: document.getElementById('studentName').value,
         studentID: document.getElementById('studentID').value,
@@ -448,11 +444,11 @@
         searchCriteria: document.getElementById('searchCriteria').value,
         searchResults: document.getElementById('searchResults').value,
         
-        q1: document.querySelector('input[name="q1"]:checked')?.value || 'Not answered',
-        q2: document.querySelector('input[name="q2"]:checked')?.value || 'Not answered',
-        q3: document.querySelector('input[name="q3"]:checked')?.value || 'Not answered',
-        q4: document.querySelector('input[name="q4"]:checked')?.value || 'Not answered',
-        q5: document.querySelector('input[name="q5"]:checked')?.value || 'Not answered'
+        q1: document.querySelector('input[name="q1"]:checked') ? document.querySelector('input[name="q1"]:checked').value : 'Not answered',
+        q2: document.querySelector('input[name="q2"]:checked') ? document.querySelector('input[name="q2"]:checked').value : 'Not answered',
+        q3: document.querySelector('input[name="q3"]:checked') ? document.querySelector('input[name="q3"]:checked').value : 'Not answered',
+        q4: document.querySelector('input[name="q4"]:checked') ? document.querySelector('input[name="q4"]:checked').value : 'Not answered',
+        q5: document.querySelector('input[name="q5"]:checked') ? document.querySelector('input[name="q5"]:checked').value : 'Not answered'
       };
       
       // Get screenshots
@@ -463,7 +459,7 @@
         advanced: document.getElementById('advancedPreview').src
       };
       
-      // Generate HTML report with student info included
+      // Build the HTML for the report, including a pre-filled "Assignment Overview" section.
       let reportHTML = `
         <!DOCTYPE html>
         <html>
@@ -490,6 +486,16 @@
             <p><strong>System Information:</strong> ${reportData.systemInfo}</p>
             <p><strong>Submission Time:</strong> ${reportData.currentTime}</p>
             <p><strong>Time Spent:</strong> ${reportData.timeSpent}</p>
+          </div>
+          
+          <!-- Pre-filled Assignment Overview Section -->
+          <div class="section">
+            <h2>Assignment Overview</h2>
+            <p>
+              This assignment requires an exploration of research articles on cybersecurity topics such as IoT security and cloud security.
+              Students are expected to perform searches on Google Scholar and academic databases, collect APA citations, and analyze their search strategies.
+              The report generated here reflects the student's research process and understanding of the assignment requirements.
+            </p>
           </div>
           
           <div class="section">
@@ -582,7 +588,6 @@
               <p><strong>Question 3:</strong> ${reportData.q3}</p>
               <p><strong>Question 4:</strong> ${reportData.q4}</p>
               <p><strong>Question 5:</strong> ${reportData.q5}</p>
-              
               <p><strong>Answer Key:</strong></p>
               <p class="${reportData.q1 === 'c' ? 'correct' : 'incorrect'}">1. c) Automatic citation generation</p>
               <p class="${reportData.q2 === 'b' ? 'correct' : 'incorrect'}">2. b) APA</p>
@@ -602,7 +607,6 @@
       
       reportWindow.document.write(reportHTML);
       reportWindow.document.close();
-      // Open the print dialog automatically so the student can print or generate a PDF.
       reportWindow.print();
     }
   </script>
